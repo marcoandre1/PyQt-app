@@ -12,9 +12,22 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
         self.button_open.clicked.connect(self.file_dialog)
+        self.button_close.clicked.connect(self.file_save)
 
     def file_dialog(self):
-        self.editor_window.setText('aaaaaaaaaaaa')
+        fd = QtGui.QFileDialog(self)
+        self.filename = fd.getOpenFileName()
+        from os.path import isfile
+        if isfile(self.filename):
+            text = open(self.filename).read()
+            self.editor_window.setText(text)
+
+    def file_save(self):
+        from os.path import isfile
+        if isfile(self.filename):
+            file = open(self.filename, 'w')
+            file.write(self.editor_window.toPlainText())
+            file.close()
 
 
 if __name__ == "__main__":
